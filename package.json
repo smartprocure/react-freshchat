@@ -1,6 +1,6 @@
 {
   "name": "react-freshchat",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "FreshChat React implementation",
   "main": "build/react-freshchat.js",
   "scripts": {
