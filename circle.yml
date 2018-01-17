@@ -1,0 +1,21 @@
+# For more options, check: https://circleci.com/docs/config-sample/
+machine:
+  timezone:
+    America/New_York
+  node:
+    version:
+      stable
+
+notify:
+  webhooks:
+    - url: https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN
+
+dependencies:
+  pre:
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+
+deployment:
+  npm:
+    branch: master
+    commands:
+      - npm publish
