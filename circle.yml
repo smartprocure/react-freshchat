@@ -24,10 +24,9 @@ test:
     - npm run cicoverage
     - rm -fr ./coverage
     - npm run danger
+    - npm run build
 
 deployment:
-  pre:
-    - npm run build
   npm:
     branch: master
     commands:
