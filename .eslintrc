@@ -1,0 +1,16 @@
+{
+  "extends": "smartprocure",
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+    "no-extra-semi": 0,
+    "no-console": 0
+  }
+}

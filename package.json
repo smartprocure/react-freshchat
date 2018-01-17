@@ -4,7 +4,16 @@
   "description": "FreshChat React implementation",
   "main": "react-freshchat.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "npm t -- --coverage --json --outputFile=test-results.json",
+    "cicoverage": "npm test",
+    "lint": "eslint --ignore-path .gitignore 'react-freshchat.js'",
+    "lint:ci": "npm run lint -- -o lint-results.json -f json",
+    "lint:fix": "npm run fmt && npm run lint -- --fix",
+    "fmt": "prettier --write 'react-freshchat.js'",
+    "duti:fix": "npm run fmt && npm run lint:fix",
+    "danger": "duti"
   },
   "repository": {
     "type": "git",
@@ -25,6 +34,28 @@
     "react": "^16.2.0"
   },
   "devDependencies": {
-    "jest": "^22.1.2"
+    "babel-eslint": "^8.0.1",
+    "danger": "~0.18.0",
+    "duti": "latest",
+    "eslint": "^4.15.0",
+    "eslint-config-smartprocure": "^1.0.2",
+    "eslint-plugin-jest": "^21.2.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "ghooks": "^2.0.0",
+    "jest": "^22.1.2",
+    "prettier": "^1.7.4"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm test",
+      "post-merge": "npm install",
+      "post-rewrite": "npm install"
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
   }
 }
