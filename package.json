@@ -1,6 +1,6 @@
 {
   "name": "react-freshchat",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "FreshChat React implementation",
   "main": "build/react-freshchat.js",
   "scripts": {
@@ -38,6 +38,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react-app": "^3.1.1",

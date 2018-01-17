@@ -1,5 +1,5 @@
 {
   "presets": ["env", "react-app"],
-  "plugins": ["transform-runtime"],
+  "plugins": ["transform-es2015-modules-umd"],
   "ignore": ["**/*.test.js"]
 }
