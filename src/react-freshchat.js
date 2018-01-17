@@ -15,7 +15,7 @@ class Queue {
     if (this.index > -1 && this.index < this.data.length) {
       let result = this.data[this.index++]
 
-      if (this.isEmpty()) {
+      if (this.isEmpty) {
         this.reset()
       }
 
@@ -36,8 +36,6 @@ class Queue {
       let { method, args } = this.dequeue()
       cb(method, args)
     }
-
-    this.reset()
   }
 
   reset() {
@@ -63,14 +61,16 @@ let mockMethods = methods => {
   return obj
 }
 
-let queueMethod = method => (...args) => 
-  console.info('  QUEUE', method, args) || earlyCalls.queue({ method, args })
+let queueMethod = method => (...args) => earlyCalls.queue({ method, args })
 
 let loadScript = () => {
+  let id = 'freshchat-lib'
+  if (document.getElementById(id)) return
   let script = document.createElement('script')
   script.async = 'true'
   script.type = 'text/javascript'
   script.src = 'https://wchat.freshchat.com/js/widget.js'
+  script.id = id
   document.head.appendChild(script)
 }
 
@@ -113,9 +113,7 @@ class FreshChat extends React.Component {
       if (window.fcWidget) {
         clearInterval(interval)
         try {
-          console.info('  - LOADED')
           earlyCalls.dequeueAll((method, value) => {
-            console.info('    DEQUEUING', method, value)
             window.fcWidget[method](...value)
           })
         } catch (e) {
