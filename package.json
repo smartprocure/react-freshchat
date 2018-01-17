@@ -13,9 +13,8 @@
     "lint:ci": "npm run lint -- -o lint-results.json -f json",
     "lint:fix": "npm run fmt && npm run lint -- --fix",
     "fmt": "prettier --write 'react-freshchat.js'",
-    "duti:fix": "npm run fmt && npm run lint:fix",
-    "danger": "duti",
-    "duti:fix": "npm run fmt && npm run lint-fix && npm run fmt"
+    "duti:fix": "npm run fmt && npm run lint-fix && npm run fmt",
+    "danger": "duti"
   },
   "repository": {
     "type": "git",
