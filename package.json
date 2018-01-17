@@ -2,8 +2,9 @@
   "name": "react-freshchat",
   "version": "1.0.0",
   "description": "FreshChat React implementation",
-  "main": "react-freshchat.js",
+  "main": "build/react-freshchat.js",
   "scripts": {
+    "build": "NODE_ENV=production babel src -d build",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "npm t -- --coverage --json --outputFile=test-results.json",
@@ -30,11 +31,16 @@
   },
   "homepage": "https://github.com/smartprocure/react-freshchat#readme",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "lodash": "^4.17.4",
     "react": "^16.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react-app": "^3.1.1",
     "danger": "~0.18.0",
     "duti": "latest",
     "eslint": "^4.15.0",
