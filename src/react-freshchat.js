@@ -126,6 +126,10 @@ class FreshChat extends React.Component {
   render() {
     return false
   }
+
+  componentWillUnmount() {
+    widget().close()
+  }
 }
 
 let availableMethods = [
