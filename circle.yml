@@ -24,7 +24,6 @@ test:
     - npm run cicoverage
     - rm -fr ./coverage
     - npm run danger
-    - npm run build
 
 deployment:
   npm:
