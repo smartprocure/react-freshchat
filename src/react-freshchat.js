@@ -15,7 +15,10 @@ export let widget = (
   return fake
 }
 
-let mockMethods = (earlyCalls = earlyCalls, methods) => {
+export let mockMethods = (
+  earlyCalls = earlyCalls,
+  methods = availableMethods
+) => {
   let obj = {}
   methods.forEach(method => {
     obj = _.set(method, queueMethod(earlyCalls, method), obj)
@@ -23,10 +26,10 @@ let mockMethods = (earlyCalls = earlyCalls, methods) => {
   return obj
 }
 
-let queueMethod = (earlyCalls, method) => (...args) =>
+export let queueMethod = (earlyCalls, method) => (...args) =>
   earlyCalls.queue({ method, args })
 
-let loadScript = (widget = window.fcWidget) => {
+export let loadScript = (widget = window.fcWidget, document = document) => {
   if (widget) return
   let script = document.createElement('script')
   script.async = 'true'
