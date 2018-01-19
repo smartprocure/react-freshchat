@@ -61,11 +61,15 @@ let mockMethods = methods => {
   return obj
 }
 
-let queueMethod = method => (...args) => earlyCalls.queue({ method, args })
+let queueMethod = method => (...args) => {
+  console.info('Queing', method)
+  earlyCalls.queue({ method, args })
+}
 
 let loadScript = () => {
   let id = 'freshchat-lib'
-  if (document.getElementById(id)) return
+  if (document.getElementById(id) || window.fcWidget) return
+  console.info('Loading FreshChat Lib')
   let script = document.createElement('script')
   script.async = 'true'
   script.type = 'text/javascript'
@@ -77,6 +81,8 @@ let loadScript = () => {
 class FreshChat extends React.Component {
   constructor(props) {
     super(props)
+    
+    console.info('FreshChat Component :)')
 
     let { token, ...moreProps } = props
 
