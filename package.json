@@ -8,6 +8,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "npm t -- --coverage --json --outputFile=test-results.json",
+    "coverage": "npm test -- --coverage --collectCoverageFrom=src/**/*.js",
     "cicoverage": "npm test",
     "lint": "eslint --ignore-path .gitignore 'react-freshchat.js'",
     "lint:ci": "npm run lint -- -o lint-results.json -f json",
@@ -20,10 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/smartprocure/react-freshchat.git"
   },
-  "keywords": [
-    "react",
-    "freshchat"
-  ],
+  "keywords": ["react", "freshchat"],
   "author": "Giuliano Kranevitter <gkranevitter@govspend.com>",
   "license": "ISC",
   "bugs": {
