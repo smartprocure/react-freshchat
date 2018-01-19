@@ -81,6 +81,8 @@ let loadScript = () => {
 class FreshChat extends React.Component {
   constructor(props) {
     super(props)
+    
+    console.info('FreshChat Component :)')
 
     let { token, ...moreProps } = props
 
