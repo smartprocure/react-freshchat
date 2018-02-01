@@ -111,7 +111,7 @@ class FreshChat extends React.Component {
   }
 
   lazyInit(settings) {
-    window.fcSettings = settings
+    widget().init(settings)
 
     loadScript()
 
