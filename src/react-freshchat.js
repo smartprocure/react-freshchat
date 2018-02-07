@@ -81,7 +81,7 @@ let loadScript = () => {
 class FreshChat extends React.Component {
   constructor(props) {
     super(props)
-    
+
     console.info('FreshChat Component :)')
 
     let { token, ...moreProps } = props
@@ -135,6 +135,15 @@ class FreshChat extends React.Component {
 
   componentWillUnmount() {
     widget().close()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let { token, ...moreProps } = nextProps;
+    this.init({
+      host: 'https://wchat.freshchat.com',
+      token,
+      ...moreProps,
+    });
   }
 }
 
