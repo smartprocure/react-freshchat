@@ -62,14 +62,12 @@ let mockMethods = methods => {
 }
 
 let queueMethod = method => (...args) => {
-  console.info('Queing', method)
   earlyCalls.queue({ method, args })
 }
 
 let loadScript = () => {
   let id = 'freshchat-lib'
   if (document.getElementById(id) || window.fcWidget) return
-  console.info('Loading FreshChat Lib')
   let script = document.createElement('script')
   script.async = 'true'
   script.type = 'text/javascript'
@@ -82,8 +80,6 @@ class FreshChat extends React.Component {
   constructor(props) {
     super(props)
     
-    console.info('FreshChat Component :)')
-
     let { token, ...moreProps } = props
 
     if (!token) {
@@ -105,13 +101,16 @@ class FreshChat extends React.Component {
 
     if (window.fcWidget) {
       window.fcWidget.init(settings)
+      if (settings.onInit) {
+        settings.onInit()
+      }
     } else {
       this.lazyInit(settings)
     }
   }
 
   lazyInit(settings) {
-    widget().init(settings)
+    widget().init(settings) // Can't use window.fcSettings because sometimes it doesn't work
 
     loadScript()
 
@@ -124,6 +123,9 @@ class FreshChat extends React.Component {
           })
         } catch (e) {
           console.error(e)
+        }
+        if (settings.onInit) {
+          settings.onInit()
         }
       }
     }, 1000)
