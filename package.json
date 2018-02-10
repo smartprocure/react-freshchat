@@ -21,7 +21,10 @@
     "type": "git",
     "url": "git+https://github.com/smartprocure/react-freshchat.git"
   },
-  "keywords": ["react", "freshchat"],
+  "keywords": [
+    "react",
+    "freshchat"
+  ],
   "author": "Giuliano Kranevitter <gkranevitter@govspend.com>",
   "license": "ISC",
   "bugs": {
