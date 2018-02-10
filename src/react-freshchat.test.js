@@ -88,6 +88,7 @@ test(`loadScript`, () => {
   let { loadScript } = FreshChat
   let widget = {}
   let document = {
+    getElementById: jest.fn(() => false),
     createElement: jest.fn(() => ({})),
     head: {
       appendChild: jest.fn(),
@@ -101,6 +102,7 @@ test(`loadScript`, () => {
   loadScript(null, document)
   expect(document.createElement).toHaveBeenCalledWith('script')
   expect(document.head.appendChild).toHaveBeenCalledWith({
+    id: 'freshchat-lib',
     async: 'true',
     type: 'text/javascript',
     src: 'https://wchat.freshchat.com/js/widget.js',

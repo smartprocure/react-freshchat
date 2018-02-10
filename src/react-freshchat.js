@@ -15,23 +15,23 @@ export let widget = (
   return fake
 }
 
-export let mockMethods = (
-  earlyCalls = earlyCalls,
-  methods = availableMethods
-) => {
+export let mockMethods = (Q = earlyCalls, methods = availableMethods) => {
   let obj = {}
   methods.forEach(method => {
-    obj = _.set(method, queueMethod(earlyCalls, method), obj)
+    obj = _.set(method, queueMethod(Q, method), obj)
   })
   return obj
 }
 
-export let queueMethod = (earlyCalls, method) => (...args) =>
-  earlyCalls.queue({ method, args })
+export let queueMethod = (Q, method) => (...args) => {
+  Q.queue({ method, args })
+}
 
 export let loadScript = (widget = window.fcWidget, document = document) => {
-  if (widget) return
+  let id = 'freshchat-lib'
+  if (widget || document.getElementById(id)) return
   let script = document.createElement('script')
+  script.id = id
   script.async = 'true'
   script.type = 'text/javascript'
   script.src = 'https://wchat.freshchat.com/js/widget.js'
@@ -41,8 +41,6 @@ export let loadScript = (widget = window.fcWidget, document = document) => {
 class FreshChat extends React.Component {
   constructor(props) {
     super(props)
-
-    this.win = window || {}
 
     let { token, ...moreProps } = props
 
@@ -66,13 +64,16 @@ class FreshChat extends React.Component {
 
     if (fcWidget) {
       fcWidget.init(settings)
+      if (settings.onInit) {
+        settings.onInit()
+      }
     } else {
       this.lazyInit(settings)
     }
   }
 
   lazyInit(settings) {
-    this.win.fcSettings = settings
+    widget().init(settings) // Can't use window.fcSettings because sometimes it doesn't work
 
     loadScript()
 
@@ -85,6 +86,9 @@ class FreshChat extends React.Component {
           })
         } catch (e) {
           console.error(e)
+        }
+        if (settings.onInit) {
+          settings.onInit()
         }
       }
     }, 1000)
