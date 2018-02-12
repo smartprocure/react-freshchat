@@ -27,7 +27,7 @@ export let queueMethod = (Q, method) => (...args) => {
   Q.queue({ method, args })
 }
 
-export let loadScript = (widget = window.fcWidget, document = document) => {
+export let loadScript = (document = document, widget = window.fcWidget) => {
   let id = 'freshchat-lib'
   if (widget || document.getElementById(id)) return
   let script = document.createElement('script')
@@ -42,6 +42,10 @@ class FreshChat extends React.Component {
   constructor(props) {
     super(props)
 
+    this.win = window || {}
+    this.doc = document || {}
+    this.checkAndInit = this.checkAndInit.bind(this)
+
     let { token, ...moreProps } = props
 
     if (!token) {
@@ -55,12 +59,16 @@ class FreshChat extends React.Component {
     })
   }
 
+  mutateOnInit(settings) {
+    let tmp = settings.onInit
+    settings.onInit = () => tmp(widget())
+    return settings
+  }
+
   init(settings) {
     let { fcWidget } = this.win
-    if (settings.onInit) {
-      let tmp = settings.onInit
-      settings.onInit = () => tmp(widget())
-    }
+
+    if (settings.onInit) this.mutateOnInit(settings)
 
     if (fcWidget) {
       fcWidget.init(settings)
@@ -75,14 +83,18 @@ class FreshChat extends React.Component {
   lazyInit(settings) {
     widget().init(settings) // Can't use window.fcSettings because sometimes it doesn't work
 
-    loadScript()
+    loadScript(this.doc)
 
-    let interval = setInterval(() => {
+    this.interval = setInterval(this.checkAndInit(settings), 1000)
+  }
+
+  checkAndInit(settings) {
+    return () => {
       if (this.win.fcWidget) {
-        clearInterval(interval)
+        clearInterval(this.interval)
         try {
-          earlyCalls.dequeueAll((method, value) => {
-            this.win.fcWidget[method](...value)
+          earlyCalls.dequeueAll(({ method, args }) => {
+            this.win.fcWidget[method](...args)
           })
         } catch (e) {
           console.error(e)
@@ -91,15 +103,11 @@ class FreshChat extends React.Component {
           settings.onInit()
         }
       }
-    }, 1000)
+    }
   }
 
   render() {
     return false
-  }
-
-  componentWillUnmount() {
-    widget().close()
   }
 }
 
