@@ -1,8 +1,8 @@
 # React Freshchat
-React Freshchat is a wrapper on top of Freshchat (see oficial doc here https://developers.freshchat.com/).
+React Freshchat is a wrapper on top of Freshchat (see official documentation here https://developers.freshchat.com/).
 
 ## How to use
-**DO NOT INCLUDE Freshchat script in `head`, React Freshchat will automatically add it with lazy load technique**
+**DO NOT INCLUDE Freshchat script in `head`, React Freshchat will automatically add it with a lazy load technique**
 
 * Install `react-freshchat` (see Installation).
 * Import the lib where you initialize your React App.
