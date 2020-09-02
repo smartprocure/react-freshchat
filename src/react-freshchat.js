@@ -1,85 +1,51 @@
 import _ from 'lodash/fp'
 import React from 'react'
-
-class Queue {
-  constructor() {
-    this.data = []
-    this.index = 0
-  }
-
-  queue(value) {
-    this.data.push(value)
-  }
-
-  dequeue() {
-    if (this.index > -1 && this.index < this.data.length) {
-      let result = this.data[this.index++]
-
-      if (this.isEmpty) {
-        this.reset()
-      }
-
-      return result
-    }
-  }
-
-  get isEmpty() {
-    return this.index >= this.data.length
-  }
-
-  dequeueAll(cb) {
-    if (!_.isFunction(cb)) {
-      throw new Error(`Please provide a callback`)
-    }
-
-    while (!this.isEmpty) {
-      let { method, args } = this.dequeue()
-      cb(method, args)
-    }
-  }
-
-  reset() {
-    this.data.length = 0
-    this.index = 0
-  }
-}
+import Queue from './queue'
 
 let fakeWidget
 let earlyCalls = new Queue()
 
-export let widget = (fake = fakeWidget) => {
-  if (window.fcWidget) return window.fcWidget
-  if (!fake) fake = mockMethods(availableMethods)
+export let widget = (
+  fake = fakeWidget,
+  real = window.fcWidget,
+  methods = availableMethods
+) => {
+  if (real) return real
+  if (!fake) fake = mockMethods(earlyCalls, methods)
   return fake
 }
 
-let mockMethods = methods => {
+export let mockMethods = (Q = earlyCalls, methods = availableMethods) => {
   let obj = {}
   methods.forEach(method => {
-    obj = _.set(method, queueMethod(method), obj)
+    obj = _.set(method, queueMethod(Q, method), obj)
   })
   return obj
 }
 
-let queueMethod = method => (...args) => {
-  earlyCalls.queue({ method, args })
+export let queueMethod = (Q, method) => (...args) => {
+  Q.queue({ method, args })
 }
 
-let loadScript = () => {
+export let loadScript = (document = document, widget = window.fcWidget) => {
   let id = 'freshchat-lib'
-  if (document.getElementById(id) || window.fcWidget) return
+  if (widget || document.getElementById(id)) return
   let script = document.createElement('script')
+  script.id = id
   script.async = 'true'
   script.type = 'text/javascript'
   script.src = 'https://wchat.freshchat.com/js/widget.js'
-  script.id = id
   document.head.appendChild(script)
 }
 
 class FreshChat extends React.Component {
   constructor(props) {
     super(props)
-    
+
+    this.win = window || {}
+    this.doc = document || {}
+    this.checkAndInit = this.checkAndInit.bind(this)
+
     let { token, ...moreProps } = props
 
     if (!token) {
@@ -93,14 +59,19 @@ class FreshChat extends React.Component {
     })
   }
 
-  init(settings) {
-    if (settings.onInit) {
-      let tmp = settings.onInit
-      settings.onInit = () => tmp(widget())
-    }
+  mutateOnInit(settings) {
+    let tmp = settings.onInit
+    settings.onInit = () => tmp(widget())
+    return settings
+  }
 
-    if (window.fcWidget) {
-      window.fcWidget.init(settings)
+  init(settings) {
+    let { fcWidget } = this.win
+
+    if (settings.onInit) this.mutateOnInit(settings)
+
+    if (fcWidget) {
+      fcWidget.init(settings)
       if (settings.onInit) {
         settings.onInit()
       }
@@ -112,14 +83,18 @@ class FreshChat extends React.Component {
   lazyInit(settings) {
     widget().init(settings) // Can't use window.fcSettings because sometimes it doesn't work
 
-    loadScript()
+    loadScript(this.doc)
 
-    let interval = setInterval(() => {
-      if (window.fcWidget) {
-        clearInterval(interval)
+    this.interval = setInterval(this.checkAndInit(settings), 1000)
+  }
+
+  checkAndInit(settings) {
+    return () => {
+      if (this.win.fcWidget) {
+        clearInterval(this.interval)
         try {
-          earlyCalls.dequeueAll((method, value) => {
-            window.fcWidget[method](...value)
+          earlyCalls.dequeueAll(({ method, args }) => {
+            this.win.fcWidget[method](...args)
           })
         } catch (e) {
           console.error(e)
@@ -128,15 +103,11 @@ class FreshChat extends React.Component {
           settings.onInit()
         }
       }
-    }, 1000)
+    }
   }
 
   render() {
     return false
-  }
-
-  componentWillUnmount() {
-    widget().close()
   }
 }
 

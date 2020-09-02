@@ -4,6 +4,7 @@
   "parserOptions": {
     "sourceType": "module"
   },
+  "plugins": ["jest"],
   "env": {
     "node": true,
     "es6": true,

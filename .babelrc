@@ -1,5 +1,3 @@
 {
-  "presets": ["env", "react-app"],
-  "plugins": ["transform-es2015-modules-umd"],
-  "ignore": ["**/*.test.js"]
+  "presets": ["env", "react"]
 }
