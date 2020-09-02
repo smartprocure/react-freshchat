@@ -20,8 +20,8 @@ class App extends React.Component {
     return <div>
       <FreshChat
         token={config.freshchat.token}
-        email: 'user@email.com',
-        first_name: '...',
+        email="user@email.com"
+        first_name="..."
         onInit={widget => {
           /* Use `widget` instead of `window.fcWidget`
             widget.user.setProperties({
